@@ -7,12 +7,12 @@
  * Status: tested
  */
 vector<vector<int>> dp;
-void calc_dp(int u) {
+void calc_dp(int u, int K, vector<vector<int>> &e) {
 	for (auto v : e[u])
-		calc_dp(v);
-	// dp[u] = [0];
+		calc_dp(v, K, e);
+	dp[u].clear(); dp[u].pb(0);
 	for (auto v : e[u]) {
-        // temp = {0, 0, ..., 0}
+        vector<int> temp(K, 0);
 		rep(i, 0, sz(dp[u])):
 		    rep(j, 0, sz(dp[v])):
 				if (i + j < K) {
@@ -21,6 +21,6 @@ void calc_dp(int u) {
 					// commonly assign to temp[i + j]
                 }
         while (sz(temp) > K) temp.pop_back();
-        // dp[u] = temp;
+        dp[u] = temp;
     }
 }
