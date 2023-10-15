@@ -15,39 +15,43 @@
  *    ed[b].emplace_back(a, eid++); }
  *  bicomps([\&](const vi\& edgelist) {...});
  * Time: O(E + V)
- * Status: tested during MIPT ICPC Workshop 2017
  */
+#pragma once
 
-vi num, st;
-vector<vector<pii>> ed;
-int Time;
-template<class F>
-int dfs(int at, int par, F& f) {
-  int me = num[at] = ++Time, e, y, top = me;
-  for (auto pa : ed[at]) if (pa.second != par) {
-    tie(y, e) = pa;
-    if (num[y]) {
-      top = min(top, num[y]);
-      if (num[y] < me)
-        st.push_back(e);
-    } else {
-      int si = sz(st);
-      int up = dfs(y, e, f);
-      top = min(top, up);
-      if (up == me) {
-        st.push_back(e);
-        f(vi(st.begin() + si, st.end()));
-        st.resize(si);
-      }
-      else if (up < me) st.push_back(e);
-      else { /* e is a bridge */ }
+//cnt is number of BCC; all vertices joined to n+i are in the same BCC
+struct BlockCutTree {
+    int n;
+    vector<vector<int>> adj;
+    vector<int> tin, low, stk;
+    int cnt, cur;
+    vector<pair<int, int>> edges;
+    BlockCutTree(int n): n(n), adj(n), tin(n, -1), low(n), stk(0), cnt(0), cur(0), edges(0) {}
+    void add_edge(int u, int v) {
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
-  }
-  return top;
-}
-
-template<class F>
-void bicomps(F f) {
-  num.assign(sz(ed), 0);
-  rep(i,0,sz(ed)) if (!num[i]) dfs(i, -1, f);
-}
+    void dfs(int x) {
+        stk.push_back(x);
+        tin[x] = low[x] = cur++;
+        for (auto y : adj[x]) {
+            if (tin[y] == -1) {
+                dfs(y);
+                low[x] = min(low[x], low[y]);
+                if (low[y] == tin[x]) {
+                    int v;
+                    while(v != y){
+                        v = stk.back();
+                        stk.pop_back();
+                        edges.emplace_back(n + cnt, v);
+                    }
+                    edges.emplace_back(x, n + cnt);
+                    cnt++;
+                }
+            } else low[x] = min(low[x], tin[y]);
+        }
+    }
+    pair<int, vector<pair<int, int>>> work() {
+        dfs(1);
+        return {cnt, edges};
+    }
+};

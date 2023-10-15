@@ -12,9 +12,7 @@ const int lg = 30;
 struct basis{
 	vector<int> v;
 	int siz;
-	
 	basis(): v(lg, 0), siz(0){}
-	
 	void insert(ll mask){
 		for(int i = lg - 1; i >= 0; i--){
 			if((mask >> i & 1) == 0) continue;
