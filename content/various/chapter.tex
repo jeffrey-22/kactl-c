@@ -47,24 +47,9 @@
 	\kactlimport{sos.h}
 	\kactlimport{XorBasis.h}
 	\kactlimport{Dijkstra.h}
+	\kactlimport{nkdp.h}
 \section{Techniques}
-	\subsection{O(nk) Tree DP}
-\begin{lstlisting}
-function calc_dp (u):
-	for each child v of u:
-		calc_dp(v)
-	dp[u]=[0]
-	for each child v of u:
-		temp=[0,0,...,0]
-		for i in 0..length(dp[u])-1:
-			for j in in 0..length(dp[v])-1:
-				if i+j<K:
-					# calculate something 
-					# typically based on dp[u][i] and dp[v][j]
-					# commonly assign to temp[i + j]
-		pop elements from temp until length(temp)<=K
-		dp[u]=temp
-\end{lstlisting}
+
 \subsection{$O(nk)$ Tree DP}
 Assume you have $n$ rocks with nonnegative integer weights $a_1,a_2,\cdots,a_n$ such that $a_1+a_2+\cdots+a_n=m$
 \begin{itemize}
@@ -97,7 +82,7 @@ affected edges from $M$, get the matching $M'$. At most two edges will be remove
 run one phase of Kuhn's algorithm to build $M_{uv}$ from $M'$ (or find out that it is impossible). Now the
 complexity is $O(n^2 m)$ which is better but still too slow. Let's improve it even more.
 Imagine if we remove verices $v$ and $u$. If the edge $uv$ is in $M$, then $M'$
-is a perfect matching. If not, then we have two unsaturated vertices in $M0$, let's say $v'$ and $u'$. 
+is a perfect matching. If not, then we have two unsaturated vertices in $M'$, let's say $v'$ and $u'$. 
 We can build the perfect matching $M_{uv}$ iff there is an alternating path 
 (An alternating path is a path in which the edges alternately belong / do not belong to the matching.)
 from $v'$ to $u'$. 
