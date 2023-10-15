@@ -46,3 +46,34 @@
 	% \kactlimport{Idk.h}
 	\kactlimport{sos.h}
 	\kactlimport{XorBasis.h}
+	\kactlimport{Dijkstra.h}
+\section{Techniques}
+	\subsection{O(nk) Tree DP}
+\begin{lstlisting}
+function calc_dp (u):
+	for each child v of u:
+		calc_dp(v)
+	dp[u]=[0]
+	for each child v of u:
+		temp=[0,0,...,0]
+		for i in 0..length(dp[u])-1:
+			for j in in 0..length(dp[v])-1:
+				if i+j<K:
+					# calculate something 
+					# typically based on dp[u][i] and dp[v][j]
+					# commonly assign to temp[i + j]
+		pop elements from temp until length(temp)<=K
+		dp[u]=temp
+\end{lstlisting}
+\subsection{$O(nk)$ Tree DP}
+Assume you have $n$ rocks with nonnegative integer weights $a_1,a_2,\cdots,a_n$ such that $a_1+a_2+\cdots+a_n=m$
+\begin{itemize}
+\item You want to find out if there is a way to choose some rocks such that their total weight is $w$
+\item Suppose there are three rocks with equal weights $a,a,a$
+\item Notice that it doesn't make any difference if we replace these three rocks with two rocks with weights $a,2a$
+\item We can repeat this process of replacing until there are at most two rocks of each weight. The sum of weights is still $m$,
+so there can be only $O(\sqrt{m})$ rocks. Now you can use a classical DP algorithm but with only $O(\sqrt{m})$
+elements, which can be lead to a better complexity in many cases.
+\end{itemize}
+This trick mostly comes up when the $a_1,a_2,\cdots,a_n$ form a partition of some kind. 
+For example, maybe they represent connected components of a graph.
