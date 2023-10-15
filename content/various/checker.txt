@@ -1,0 +1,19 @@
+while true; do
+./generator>r.txt
+./main_code<r.txt>w1.txt
+./brute_force<r.txt>w2.txt
+if (diff w1.txt w2.txt); then
+echo "AC"
+else
+exit 0
+fi
+done
+
+@echo off
+:loop
+generator.exe
+main_code.exe
+brute_force.exe
+fc w1.txt w2.txt
+if not errorlevel 1 goto loop
+pause

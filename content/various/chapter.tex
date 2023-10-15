@@ -48,18 +48,7 @@
 	\kactlimport{XorBasis.h}
 	\kactlimport{Dijkstra.h}
 	\kactlimport{nkdp.h}
-	
 
-	\subsection{$O(nk)$ Tree DP}
-	Assume you have $n$ rocks with nonnegative integer weights $a_1,a_2,\cdots,a_n$ such that $a_1+a_2+\cdots+a_n=m$
-	You want to find out if there is a way to choose some rocks such that their total weight is $w$/
-	Suppose there are three rocks with equal weights $a,a,a$/
-	Notice that it doesn't make any difference if we replace these three rocks with two rocks with weights $a,2a$/
-	We can repeat this process of replacing until there are at most two rocks of each weight. The sum of weights is still $m$,
-	so there can be only $O(\sqrt{m})$ rocks. Now you can use a classical DP algorithm but with only $O(\sqrt{m})$
-	elements, which can be lead to a better complexity in many cases.
-	This trick mostly comes up when the $a_1,a_2,\cdots,a_n$ form a partition of some kind. 
-	For example, maybe they represent connected components of a graph.
 	\subsection{Slope Trick DP}
 	Slope-trick-able: Continuous, sections with integer slope, convex/concave.
 	Store the function with the rightmost section and a multiset of all the slope changing points where the slope changes its value by 1.
@@ -88,3 +77,5 @@
 	altertating path from $v'$ to $u'$ in $O(nm)$ simply by running DFS from each node $v'$ of the left part.
 	Now we can check for each pair $(u, v)$ if it is good or not in $O(1)$. 
 	So the total complexity will be $O(nm + n^2)$.
+
+	\kactlimport[-l raw]{checker.txt}
