@@ -6,6 +6,7 @@ using namespace std;
 #define pb push_back
 #define ff first
 #define ss second
+#define nl '\n'
 typedef long long ll;
 typedef long double ld;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
