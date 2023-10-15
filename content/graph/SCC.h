@@ -15,27 +15,39 @@
  */
 #pragma once
 
-vi val, comp, z, cont;
-int Time, ncomps;
-template<class G, class F> int dfs(int j, G& g, F& f) {
-  int low = val[j] = ++Time, x; z.push_back(j);
-  for (auto e : g[j]) if (comp[e] < 0)
-    low = min(low, val[e] ?: dfs(e,g,f));
-
-  if (low == val[j]) {
-    do {
-      x = z.back(); z.pop_back();
-      comp[x] = ncomps;
-      cont.push_back(x);
-    } while (x != j);
-    f(cont); cont.clear();
-    ncomps++;
-  }
-  return val[j] = low;
-}
-template<class G, class F> void scc(G& g, F f) {
-  int n = sz(g);
-  val.assign(n, 0); comp.assign(n, -1);
-  Time = ncomps = 0;
-  rep(i,0,n) if (comp[i] < 0) dfs(i, g, f);
-}
+struct SCC {
+    int n;
+    vector<vector<int>> adj;
+    vector<int> stk, dfn, low, bel;
+    int cur, cnt;
+    
+    SCC(int n): n(n), adj(n), dfn(n, -1), low(n), bel(n, -1), stk(0), cur(0), cnt(0) {}
+    
+    void add_edge(int u, int v){
+    	adj[u].push_back(v);
+	}
+    
+    void dfs(int x) {
+        dfn[x] = low[x] = cur++;
+        stk.push_back(x);
+        for (auto y : adj[x]) {
+            if (dfn[y] == -1) {
+                dfs(y); 
+				low[x] = min(low[x], low[y]);
+            } else if (bel[y] == -1) low[x] = min(low[x], dfn[y]);
+        }
+        if (dfn[x] == low[x]) {
+            int y = -1;
+            while(y != x) {
+                y = stk.back();
+                bel[y] = cnt;
+                stk.pop_back();
+            }
+            cnt++;
+        }
+    }
+    vector<int> work() {
+        for (int i = 0; i < n; i++) if(dfn[i] == -1) dfs(i);
+        return bel;
+    }
+};

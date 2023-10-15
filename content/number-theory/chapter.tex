@@ -49,18 +49,49 @@
 
 	The number of divisors of $n$ is at most around 100 for $n < 5e4$, 500 for $n < 1e7$, 2000 for $n < 1e10$, 200\,000 for $n < 1e19$.
 
-\section{Mobius Function}
+	\section{Mobius Function}
+	\[
+		\mu(n) = \begin{cases} 0 & n \textrm{ is not square free}\\ 1 & n \textrm{ has even number of prime factors}\\ -1 & n \textrm{ has odd number of prime factors}\\\end{cases}
+	\]
+	  Mobius Inversion:
+	  \[ g(n) = \sum_{d|n} f(d) \Leftrightarrow f(n) = \sum_{d|n} \mu(d)g(n/d) \]
+	  Other useful formulas/forms:
+	
+	  $ \sum_{d | n} \mu(d) = [ n = 1] $ (very useful)
+	
+	  $ g(n) = \sum_{n|d} f(d) \Leftrightarrow f(n) = \sum_{n|d} \mu(d/n)g(d)$
+	
+	 $ g(n) = \sum_{1 \leq m \leq n} f(\left\lfloor\frac{n}{m}\right \rfloor ) \Leftrightarrow f(n) = \sum_{1\leq m\leq n} \mu(m)g(\left\lfloor\frac{n}{m}\right\rfloor)$
+	
+\section{Sum over subset}
+\begin{lstlisting}
+for (int i = 0; i < (1 << n); i++) {
+	// iterate over all subsets of i directly
+	for (int j = (i - 1) & i; j >= 0; j = (j - 1) & i) { sos[i] += a[j]; }
+}
+\end{lstlisting}
+\section{XOR Basis}
+We can use a set of independent vectors as basis for xor sum.
+\begin{lstlisting}
+int basis[d]; // basis[i] keeps the mask of the vector whose f value is i
+int sz; // Current size of the basis
+void insertVector(int mask) {
+	for (int i = 0; i < d; i++) {
+		if ((mask & 1 << i) == 0) continue; // continue if i != f(mask)
+		if (!basis[i]) { // If there is no basis vector with the i'th bit set, then insert this vector into the basis
+			basis[i] = mask;
+			++sz;
+			return;
+		}
+		mask ^= basis[i]; // Otherwise subtract the basis vector from this vector
+	}
+}
+\end{lstlisting}
+\section{Sprague Grundy}
+\DeclareMathOperator{\mex}{mex}
 \[
-	\mu(n) = \begin{cases} 0 & n \textrm{ is not square free}\\ 1 & n \textrm{ has even number of prime factors}\\ -1 & n \textrm{ has odd number of prime factors}\\\end{cases}
+	SG(x) = \mex{y|x\to y}, SG([x_1, x_2, \cdots, x_n]) = \xor\{x_i\}, SG(x)=0 \iff lose
 \]
-  Mobius Inversion:
-  \[ g(n) = \sum_{d|n} f(d) \Leftrightarrow f(n) = \sum_{d|n} \mu(d)g(n/d) \]
-  Other useful formulas/forms:
-
-  $ \sum_{d | n} \mu(d) = [ n = 1] $ (very useful)
-
-  $ g(n) = \sum_{n|d} f(d) \Leftrightarrow f(n) = \sum_{n|d} \mu(d/n)g(d)$
-
- $ g(n) = \sum_{1 \leq m \leq n} f(\left\lfloor\frac{n}{m}\right \rfloor ) \Leftrightarrow f(n) = \sum_{1\leq m\leq n} \mu(m)g(\left\lfloor\frac{n}{m}\right\rfloor)$
+	   
 
  % \kactlimport{something.h}

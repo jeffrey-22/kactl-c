@@ -17,49 +17,77 @@
 
 #include "../data-structures/LazySegmentTree.h"
 
-template <bool VALS_EDGES> struct HLD {
-  int N, tim = 0;
-  vector<vi> adj;
-  vi par, siz, depth, rt, pos;
-  Node *tree;
-  HLD(vector<vi> adj_)
-    : N(sz(adj_)), adj(adj_), par(N, -1), siz(N, 1), depth(N),
-      rt(N),pos(N),tree(new Node(0, N)){ dfsSz(0); dfsHld(0); }
-  void dfsSz(int v) {
-    if (par[v] != -1) adj[v].erase(find(all(adj[v]), par[v]));
-    for (int& u : adj[v]) {
-      par[u] = v, depth[u] = depth[v] + 1;
-      dfsSz(u);
-      siz[v] += siz[u];
-      if (siz[u] > siz[adj[v][0]]) swap(u, adj[v][0]);
+struct HLD {
+    int n, cur;
+    vector<int> siz, top, dep, parent, in, out, seq;
+    vector<vector<int>> adj;
+    
+    HLD(int n) : n(n), siz(n), top(n), dep(n), parent(n, -1), in(n), out(n), seq(n), adj(n), cur(0) {}
+    void add_edge(int u, int v) {
+        adj[u].pb(v); adj[v].pb(u);
     }
-  }
-  void dfsHld(int v) {
-    pos[v] = tim++;
-    for (int u : adj[v]) {
-      rt[u] = (u == adj[v][0] ? rt[v] : u);
-      dfsHld(u);
+    void work(int root = 0) {
+        top[root] = root; dep[root] = 0;
+        parent[root] = -1;
+        dfs1(root); dfs2(root);
     }
-  }
-  template <class B> void process(int u, int v, B op) {
-    for (; rt[u] != rt[v]; v = par[rt[v]]) {
-      if (depth[rt[u]] > depth[rt[v]]) swap(u, v);
-      op(pos[rt[v]], pos[v] + 1);
+    void dfs1(int u) {
+        if (parent[u] != -1)  adj[u].erase(find(all(adj[u]), parent[u]));
+        siz[u] = 1;
+        for (auto &v : adj[u]) {
+            parent[v] = u;
+            dep[v] = dep[u] + 1;
+            dfs1(v);
+            siz[u] += siz[v];
+            if (siz[v] > siz[adj[u][0]]) swap(v, adj[u][0]);
+        }
     }
-    if (depth[u] > depth[v]) swap(u, v);
-    op(pos[u] + VALS_EDGES, pos[v] + 1);
-  }
-  void modifyPath(int u, int v, int val) {
-    process(u, v, [&](int l, int r) { tree->add(l, r, val); });
-  }
-  int queryPath(int u, int v) { // Modify depending on problem
-    int res = -1e9;
-    process(u, v, [&](int l, int r) {
-        res = max(res, tree->query(l, r));
-    });
-    return res;
-  }
-  int querySubtree(int v) { // modifySubtree is similar
-    return tree->query(pos[v] + VALS_EDGES, pos[v] + siz[v]);
-  }
+    void dfs2(int u) {
+        in[u] = cur++;
+        seq[in[u]] = u;
+        for (auto v : adj[u]) {
+            top[v] = v == adj[u][0] ? top[u] : v;
+            dfs2(v);
+        }
+        out[u] = cur - 1;
+    }
+    int lca(int u, int v) {
+        while (top[u] != top[v]) {
+            if (dep[top[u]] > dep[top[v]]) u = parent[top[u]];
+			else v = parent[top[v]];
+        }
+        return dep[u] < dep[v] ? u : v;
+    }
+    int dist(int u, int v) {
+        return dep[u] + dep[v] - 2 * dep[lca(u, v)];
+    }
+    int jump(int u, int k) {
+        if (dep[u] < k) return -1;
+        int d = dep[u] - k;
+        while (dep[top[u]] > d) u = parent[top[u]];
+        return seq[in[u] - dep[u] + d];
+    }
+    //is u ancestor of v
+    bool isanc(int u, int v) {
+        return in[u] <= in[v] && out[u] >= out[v];
+    }
+    // child of u that is ancestor of v
+    int rootedChild(int u, int v) {
+        if (u == v) return u;
+        if (!isanc(u, v)) return parent[u];
+        auto it = upper_bound(all(adj[u]), v, [&](int x, int y) {
+            return in[x] < in[y];
+        }) - 1;
+        return *it;
+    }
+    //size of subtree of v when rooted at u
+    int rootedSize(int u, int v) {
+        if (u == v) return n;
+        if (!isanc(v, u)) return siz[v];
+        return n - siz[rootedChild(v, u)];
+    }
+    
+    int rootedLca(int a, int b, int c) {
+        return lca(a, b) ^ lca(b, c) ^ lca(c, a);
+    }
 };
