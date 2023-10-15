@@ -6,18 +6,21 @@
  * Description: Tree DP for $O(nk)$
  * Status: tested
  */
-
-function calc_dp (u):
-	for each child v of u:
-		calc_dp(v)
-	dp[u]=[0]
-	for each child v of u:
-		temp=[0,0,...,0]
-		for i in 0..length(dp[u])-1:
-			for j in in 0..length(dp[v])-1:
-				if i+j<K:
-					# calculate something 
-					# typically based on dp[u][i] and dp[v][j]
-					# commonly assign to temp[i + j]
-		pop elements from temp until length(temp)<=K
-		dp[u]=temp
+vector<vector<int>> dp;
+void calc_dp(int u) {
+	for (auto v : e[u])
+		calc_dp(v);
+	// dp[u] = [0];
+	for (auto v : e[u]) {
+        // temp = {0, 0, ..., 0}
+		rep(i, 0, sz(dp[u])):
+		    rep(j, 0, sz(dp[v])):
+				if (i + j < K) {
+					// calculate something 
+					// typically based on dp[u][i] and dp[v][j]
+					// commonly assign to temp[i + j]
+                }
+        while (sz(temp) > K) temp.pop_back();
+        // dp[u] = temp;
+    }
+}
