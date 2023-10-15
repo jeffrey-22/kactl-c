@@ -48,43 +48,43 @@
 	\kactlimport{XorBasis.h}
 	\kactlimport{Dijkstra.h}
 	\kactlimport{nkdp.h}
-\section{Techniques}
+	
 
-\subsection{$O(nk)$ Tree DP}
-Assume you have $n$ rocks with nonnegative integer weights $a_1,a_2,\cdots,a_n$ such that $a_1+a_2+\cdots+a_n=m$
-You want to find out if there is a way to choose some rocks such that their total weight is $w$/
-Suppose there are three rocks with equal weights $a,a,a$/
-Notice that it doesn't make any difference if we replace these three rocks with two rocks with weights $a,2a$/
-We can repeat this process of replacing until there are at most two rocks of each weight. The sum of weights is still $m$,
-so there can be only $O(\sqrt{m})$ rocks. Now you can use a classical DP algorithm but with only $O(\sqrt{m})$
-elements, which can be lead to a better complexity in many cases.
-This trick mostly comes up when the $a_1,a_2,\cdots,a_n$ form a partition of some kind. 
-For example, maybe they represent connected components of a graph.
-\subsection{Slope Trick DP}
-Slope-trick-able: Continuous, sections with integer slope, convex/concave.
-Store the function with the rightmost section and a multiset of all the slope changing points where the slope changes its value by 1.
-Sum of slope-trick-able functions is slope-trick-able.
-Prefix min of slope-trick-able functions is slope-trick-able. Or local minimum.
-\subsection{Knapsack and subset sum}
-There are $N$ items, with weight $w_i$. Say $C=\sum w_i$. For each $k\in [1,C]$, can we find set $S$ such that $\sum_{i\in S}w_i=k$?
-Solvable in $O(\frac{C\sqrt{C}}{32})$: If $w_i$ repeats for $occ_i$ times, decompose into powers of $2$.
-$occ_i=12 \to \{w_i, 2w_i, 4w_i, 5w_i\}$. Number of $(w_i, occ_i)$ tuples is only $\sqrt{C}$.
-Alternatively: process weights from small to large. Say smallest weight is $w$ with $occ$ occurrences. 
-We have the current list as well as an initially empty new list as the final new weights.
-If $occ$ is odd, add $(2w, \frac{occ-1}{2})$ to the current list and $(w, 1)$ to a new list. 
-For even add $(2w, \frac{occ-2}{2})$ to the current list and $(w, 2)$ to the new list.
-Now we have $\sqrt{C}$ items, so just dp with an array of $C$ $0/1$ bits.
-\subsection{Bipartite matching with one pair removed}
-Let's build the perfect matching for initial graph $M$. When we remove vertices $u$ and $v$, let's remove the
-affected edges from $M$, get the matching $M'$. At most two edges will be removed, so we only need to
-run one phase of Kuhn's algorithm to build $M_{uv}$ from $M'$ (or find out that it is impossible). Now the
-complexity is $O(n^2 m)$ which is better but still too slow. Let's improve it even more.
-Imagine if we remove verices $v$ and $u$. If the edge $uv$ is in $M$, then $M'$
-is a perfect matching. If not, then we have two unsaturated vertices in $M'$, let's say $v'$ and $u'$. 
-We can build the perfect matching $M_{uv}$ iff there is an alternating path 
-(An alternating path is a path in which the edges alternately belong / do not belong to the matching.)
-from $v'$ to $u'$. 
-We can precalculate for each pair of nodes $(v', u')$ if there is an
-altertating path from $v'$ to $u'$ in $O(nm)$ simply by running DFS from each node $v'$ of the left part.
-Now we can check for each pair $(u, v)$ if it is good or not in $O(1)$. 
-So the total complexity will be $O(nm + n^2)$.
+	\subsection{$O(nk)$ Tree DP}
+	Assume you have $n$ rocks with nonnegative integer weights $a_1,a_2,\cdots,a_n$ such that $a_1+a_2+\cdots+a_n=m$
+	You want to find out if there is a way to choose some rocks such that their total weight is $w$/
+	Suppose there are three rocks with equal weights $a,a,a$/
+	Notice that it doesn't make any difference if we replace these three rocks with two rocks with weights $a,2a$/
+	We can repeat this process of replacing until there are at most two rocks of each weight. The sum of weights is still $m$,
+	so there can be only $O(\sqrt{m})$ rocks. Now you can use a classical DP algorithm but with only $O(\sqrt{m})$
+	elements, which can be lead to a better complexity in many cases.
+	This trick mostly comes up when the $a_1,a_2,\cdots,a_n$ form a partition of some kind. 
+	For example, maybe they represent connected components of a graph.
+	\subsection{Slope Trick DP}
+	Slope-trick-able: Continuous, sections with integer slope, convex/concave.
+	Store the function with the rightmost section and a multiset of all the slope changing points where the slope changes its value by 1.
+	Sum of slope-trick-able functions is slope-trick-able.
+	Prefix min of slope-trick-able functions is slope-trick-able. Or local minimum.
+	\subsection{Knapsack and subset sum}
+	There are $N$ items, with weight $w_i$. Say $C=\sum w_i$. For each $k\in [1,C]$, can we find set $S$ such that $\sum_{i\in S}w_i=k$?
+	Solvable in $O(\frac{C\sqrt{C}}{32})$: If $w_i$ repeats for $occ_i$ times, decompose into powers of $2$.
+	$occ_i=12 \to \{w_i, 2w_i, 4w_i, 5w_i\}$. Number of $(w_i, occ_i)$ tuples is only $\sqrt{C}$.
+	Alternatively: process weights from small to large. Say smallest weight is $w$ with $occ$ occurrences. 
+	We have the current list as well as an initially empty new list as the final new weights.
+	If $occ$ is odd, add $(2w, \frac{occ-1}{2})$ to the current list and $(w, 1)$ to a new list. 
+	For even add $(2w, \frac{occ-2}{2})$ to the current list and $(w, 2)$ to the new list.
+	Now we have $\sqrt{C}$ items, so just dp with an array of $C$ $0/1$ bits.
+	\subsection{Bipartite matching with one pair removed}
+	Let's build the perfect matching for initial graph $M$. When we remove vertices $u$ and $v$, let's remove the
+	affected edges from $M$, get the matching $M'$. At most two edges will be removed, so we only need to
+	run one phase of Kuhn's algorithm to build $M_{uv}$ from $M'$ (or find out that it is impossible). Now the
+	complexity is $O(n^2 m)$ which is better but still too slow. Let's improve it even more.
+	Imagine if we remove verices $v$ and $u$. If the edge $uv$ is in $M$, then $M'$
+	is a perfect matching. If not, then we have two unsaturated vertices in $M'$, let's say $v'$ and $u'$. 
+	We can build the perfect matching $M_{uv}$ iff there is an alternating path 
+	(An alternating path is a path in which the edges alternately belong / do not belong to the matching.)
+	from $v'$ to $u'$. 
+	We can precalculate for each pair of nodes $(v', u')$ if there is an
+	altertating path from $v'$ to $u'$ in $O(nm)$ simply by running DFS from each node $v'$ of the left part.
+	Now we can check for each pair $(u, v)$ if it is good or not in $O(1)$. 
+	So the total complexity will be $O(nm + n^2)$.
