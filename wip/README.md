@@ -10,5 +10,4 @@ wavelet compression?
 
 
 fix mcmf, flow
-fix hashmap
 half plane intersection

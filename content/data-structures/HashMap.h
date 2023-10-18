@@ -3,26 +3,20 @@
  * Date: 2018-07-23
  * License: CC0
  * Source: http://codeforces.com/blog/entry/60737
- * Description: Hash map with mostly the same API as unordered\_map, but \tilde
- * 3x faster. Uses 1.5x memory.
- * Initial capacity must be a power of 2 (if provided).
+ * Description: Hash map of (key:ull, value:T). Create with the highest b such that $2^b$ of entries fit in the memory limit. Faster than unordered\_map, but if not for tight constraint use unordered\_map for stability.
  */
 #pragma once
 
-#include <bits/extc++.h> /** keep-include */
-// To use most bits rather than just the lowest ones:
-struct chash { // large odd number for C
-  const uint64_t C = ll(4e18 * acos(0)) | 71;
-  ll operator()(ll x) const { return __builtin_bswap64(x*C); }
+typedef uint64_t ull;                                                                                                                
+template<class T>
+struct HashMap {
+    int b;
+    vector<pair<ull, T>> v;
+    HashMap(int b) : b(b), v(1 << b) {}
+    T& operator[](ull x) {
+        ull y = x >> (64 - b), m = (1 << b) - 1;
+        while (v[y].first && v[y].first != x) ++y &= m;
+        v[y].first = x;
+        return v[y].second;
+    }   
 };
-__gnu_pbds::gp_hash_table<ll,int,chash> h({},{},{},{},{1<<16});
-
-/** For CodeForces, or other places where hacking might be a problem:
-
-const int RANDOM = chrono::high_resolution_clock::now().time_since_epoch().count();
-struct chash { // To use most bits rather than just the lowest ones:
-  const uint64_t C = ll(4e18 * acos(0)) | 71; // large odd number
-  ll operator()(ll x) const { return __builtin_bswap64((x^RANDOM)*C); }
-};
-__gnu_pbds::gp_hash_table<ll, int, chash> h({},{},{},{}, {1 << 16});
-*/
