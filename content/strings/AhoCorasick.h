@@ -3,7 +3,7 @@
  * Date: 2015-02-18
  * License: CC0
  * Source: marian's (TC) code
- * Description: Aho-Corasick automaton, used for multiple pattern matching.
+ * Description: Aho-Corasick automaton, used for multiple pattern matching. Number of nodes $leq 2+\sum |p|$
  * Initialize with AhoCorasick ac(patterns); the automaton start node will be at index 0.
  * find(word) returns for each position the index of the longest word that ends there, or -1 if none.
  * findAll($-$, word) finds all words (up to $N \sqrt N$ many if no duplicate patterns)

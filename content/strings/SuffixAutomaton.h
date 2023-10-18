@@ -3,7 +3,7 @@
  * Date: 2015-04-11
  * License: Unknown
  * Source: Suffix automaton
- * Description: Builds suffix automaton for a string.
+ * Description: Builds suffix automaton for a string. Number of nodes $\leq 1+2\cdot |s|$ for string $s$.
  * Time: O(n)
  * Status: stress-tested
  */
@@ -61,12 +61,12 @@ struct SuffixAutomaton {
   }
   void calc_terminals()
   {
-	vector<int> terminals;
-	int p = last;
-	while(p > 0) {
-	  terminals.push_back(p);
-	  p = link[p];
-	}
+    vector<int> terminals;
+    int p = last;
+    while(p > 0) {
+      terminals.push_back(p);
+      p = link[p];
+    }
   }
 };
 

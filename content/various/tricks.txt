@@ -1,4 +1,4 @@
-auto lexical_compare = [](int a, int b) { return to_string(a) < to_string(b); };
+auto lexical_compare = [&](int a, int b) { return to_string(a) < to_string(b); };
 set<int, decltype(lexical_compare)> s;
 
 echo "g++ -std=gnu++20 -x c++ -Wall -O2 -static -pipe -o \$1 \"\$1.cpp\" -lm" >> mygpp && chmod u+x mygpp
