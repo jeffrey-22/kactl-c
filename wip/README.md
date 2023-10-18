@@ -4,4 +4,4 @@
 
 fix mcmf, flow
 
-half plane intersection
+hashing

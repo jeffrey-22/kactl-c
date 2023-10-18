@@ -10,13 +10,13 @@
 typedef uint64_t ull;                                                                                                                
 template<class T>
 struct HashMap {
-    int b;
-    vector<pair<ull, T>> v;
-    HashMap(int b) : b(b), v(1 << b) {}
-    T& operator[](ull x) {
-        ull y = x >> (64 - b), m = (1 << b) - 1;
-        while (v[y].first && v[y].first != x) ++y &= m;
-        v[y].first = x;
-        return v[y].second;
-    }   
+  int b;
+  vector<pair<ull, T>> v;
+  HashMap(int b) : b(b), v(1 << b) {}
+  T& operator[](ull x) {
+      ull y = x >> (64 - b), m = (1 << b) - 1;
+      while (v[y].first && v[y].first != x) ++y &= m;
+      v[y].first = x;
+      return v[y].second;
+  }   
 };
