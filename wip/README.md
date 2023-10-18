@@ -2,8 +2,6 @@
 
 
 
-wavelet compression?
-
 fix mcmf, flow
 
 half plane intersection

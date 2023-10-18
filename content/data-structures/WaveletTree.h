@@ -1,72 +1,50 @@
 /**
- * Author: Lukas Polacek, Simon Lindholm
- * Date: 2019-12-26
+ * Author: Oskar Haarklou Veileborg
+ * Date: 2021-05-28
  * License: CC0
- * Source: folklore
- * Description: Wavelet Tree
- * Status: tested as part of DirectedMST.h
+ * Source: https://users.dcc.uchile.cl/~jperez/papers/ioiconf16.pdf
+ * Description: Tree that recursively partitions a sequence into subsequences by value.
+ * $\sigma$ is the difference between the largest and smallest element in the sequence
+ * (pre-compress values if $\sigma$ is large).
+ * Use with a bump allocator for better performance.
+ * Time: O(\log \sigma). \textbf{Space:} O(N \log \sigma).
+ * Usage: auto [lo, hi] = minmax_element(all(A));
+ * Node tr(A, *lo, (*hi)+1);
+ * Status: Stress-tested and tested on kattis: anothersubstringqueryproblem (quantile)
+ * Details: Can probably be transformed to a non-pointer version for better performance.
  */
 #pragma once
 
-struct wavelet_tree{
-    int low, high;
-    wavelet_tree *l, *r;
-    vector<int> freq;
-    wavelet_tree(int* from, int* to, int x, int y)
-    {
-        low = x, high = y;
-        if (from >= to)
-            return;
-        if (high == low) {
-            freq.reserve(to - from + 1);
-            freq.push_back(0);
-            for (auto it = from; it != to; it++)
-                freq.push_back(freq.back() + 1);
-            return;
-        }
-        int mid = (low + high) / 2;
-        auto lessThanMid = [mid](int x) {
-            return x <= mid;
-        };
-        freq.reserve(to - from + 1);
-        freq.push_back(0);
-        for (auto it = from; it != to; it++)
-            freq.push_back(freq.back() + lessThanMid(*it));       
-        auto pivot = stable_partition(from, to, lessThanMid);
-        l = new wavelet_tree(from, pivot, low, mid);
-        r = new wavelet_tree(pivot, to, mid + 1, high);
-    }
- 
-     //no. of elements in [l,r] less than or equal to k
-    int kOrLess(int l, int r, int k)
-    {
-        if (l > r or k < low)
-            return 0;
-        if (high <= k)
-            return r - l + 1;
-        int lb = freq[l - 1];
-        int rb = freq[r];
-        return (this->l->kOrLess(lb + 1, rb, k) +
-             this->r->kOrLess(l - lb, r - rb, k));
-    }
-    
-    //kth smallest element in [l,r]
-    int kthsmallest(int l, int r, int k){
-        if(l > r) return 0;
-        if(low == high) return low;
-        int inLeft = freq[r] - freq[l-1];
-        int lb = freq[l-1];
-        int rb = freq[r];
-        if(k <= inLeft) return this->l->kthsmallest(lb+1,rb,k);
-        return this->r->kthsmallest(l-lb,r-rb,k-inLeft);
-    }
-    
-    //count in [l,r] equal to k
-    int count(int l, int r, int k){
-        if(l < k || k < low || k > high) return 0;
-        if(low == high) return r-l+1;
-        int lb = freq[l-1], rb = freq[r], mid = (low+high)/2;
-        if(k<=mid) return this->l->count(lb+1,rb,k);
-        return this->r->count(l-lb,r-rb,k);
-    }
+struct Node {
+	Node *l = 0, *r = 0;
+	int lo, hi;	vi C; // C[i] = # of first i elements going left
+	Node(const vi& A, int lo, int hi) : lo(lo), hi(hi), C(1, 0) {
+		if(lo + 1 == hi) return;
+		int mid = (lo + hi) / 2;
+		vi L, R;
+		for(auto a: A) {
+			C.pb(C.back());
+			if(a < mid) L.pb(a), C.back()++; else R.pb(a);
+		}
+		l = new Node(L, lo, mid), r = new Node(R, mid, hi);
+	}
+	// k'th (0-indexed) element in the sorted range [L, R)
+	int quantile(int k, int L, int R) {
+		if(lo + 1 == hi) return lo;
+		int c = C[R] - C[L];
+		if(k < c) return l->quantile(k, C[L], C[R]);
+		return r->quantile(k - c, L - C[L], R - C[R]);
+	}
+	// number of elements in range [0, R) equal to x
+	int rank(int x, int R) {
+		if(lo + 1 == hi) return R;
+		if(x < l->hi) return l->rank(x, C[R]);
+		return r->rank(x, R - C[R]);
+	}
+	// number of elements x in range [L, R) st. a <= x < b
+	int rectangle(int a, int b, int L, int R) {
+		if(a <= lo && hi <= b) return R - L;
+		if(a >= hi || b <= lo) return 0;
+		return l->rectangle(a, b, C[L], C[R]) +	r->rectangle(a, b, L - C[L], R - C[R]);
+	}
 };
