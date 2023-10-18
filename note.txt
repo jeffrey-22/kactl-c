@@ -1,8 +1,0 @@
-TO BE ADDED:
-
-Hall's Theorem
-Dual Linear Program
-Dual matroid of the matching matroid
-Subset sum
-Knapsack blog (min, + conv)
-[Tutorial] Collection of little techniques
