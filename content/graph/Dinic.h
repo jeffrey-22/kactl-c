@@ -13,15 +13,16 @@ struct Dinic {
   struct Edge {
     int to, rev;
     ll c, oc;
-    ll flow() { return max(oc - c, 0LL); } // if you need flows
   };
   vi lvl, ptr, q;
   vector<vector<Edge>> adj;
   Dinic(int n) : lvl(n), ptr(n), q(n), adj(n) {}
-  void addEdge(int a, int b, ll c, ll rcap = 0) {
+  pair<int, int> addEdge(int a, int b, ll c, ll rcap = 0) {
     adj[a].push_back({b, sz(adj[b]), c, c});
     adj[b].push_back({a, sz(adj[a]) - 1, rcap, rcap});
+    return {a, sz(adj[a]) - 1};
   }
+  ll getflow(pair<int, int> x) { Edge e = adj[x.ff][x.ss]; return max(e.oc - e.c, 0ll); }
   ll dfs(int v, int t, ll f) {
     if (v == t || !f) return f;
     for (int& i = ptr[v]; i < sz(adj[v]); i++) {
@@ -49,5 +50,5 @@ struct Dinic {
     } while (lvl[t]);
     return flow;
   }
-  bool leftOfMinCut(int a) { return lvl[a] != 0; }
+  bool isVertexOnTheLeftOfMinCut(int a) { return lvl[a] != 0; }
 };

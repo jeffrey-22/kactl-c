@@ -46,7 +46,6 @@
 	% \kactlimport{Idk.h}
 	\kactlimport{sos.h}
 	\kactlimport{XorBasis.h}
-	\kactlimport{Dijkstra.h}
 	\kactlimport{nkdp.h}
 
 	\subsection{Slope Trick DP}
@@ -63,20 +62,6 @@
 	If $occ$ is odd, add $(2w, \frac{occ-1}{2})$ to the current list and $(w, 1)$ to a new list. 
 	For even add $(2w, \frac{occ-2}{2})$ to the current list and $(w, 2)$ to the new list.
 	Now we have $\sqrt{C}$ items, so just dp with an array of $C$ $0/1$ bits.
-	\subsection{Bipartite matching with one pair removed}
-	Let's build the perfect matching for initial graph $M$. When we remove vertices $u$ and $v$, let's remove the
-	affected edges from $M$, get the matching $M'$. At most two edges will be removed, so we only need to
-	run one phase of Kuhn's algorithm to build $M_{uv}$ from $M'$ (or find out that it is impossible). Now the
-	complexity is $O(n^2 m)$ which is better but still too slow. Let's improve it even more.
-	Imagine if we remove verices $v$ and $u$. If the edge $uv$ is in $M$, then $M'$
-	is a perfect matching. If not, then we have two unsaturated vertices in $M'$, let's say $v'$ and $u'$. 
-	We can build the perfect matching $M_{uv}$ iff there is an alternating path 
-	(An alternating path is a path in which the edges alternately belong / do not belong to the matching.)
-	from $v'$ to $u'$. 
-	We can precalculate for each pair of nodes $(v', u')$ if there is an
-	altertating path from $v'$ to $u'$ in $O(nm)$ simply by running DFS from each node $v'$ of the left part.
-	Now we can check for each pair $(u, v)$ if it is good or not in $O(1)$. 
-	So the total complexity will be $O(nm + n^2)$.
 
 	\kactlimport[-l raw]{checker.txt}
 	\kactlimport[-l raw]{tricks.txt}

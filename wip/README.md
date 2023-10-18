@@ -2,6 +2,8 @@
 
 
 
-fix mcmf, flow
+fix mcmf
 
 hashing
+
+compress
