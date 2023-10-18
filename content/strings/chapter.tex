@@ -1,5 +1,11 @@
 \chapter{Strings}
 
+\subsection{Common Tricks}
+P's occurrences in fixed T: a range in the SA of T (can be further narrowed ch by ch);
+Longest Common Prefix of s and t[i:]: Z Func of \texttt{s + '#' + t};
+Number of ch matches of s and t[i:]: reverse s, $P_{s,c}(x)=[s_i==c]x^i$, FFT of $P_{s,c}(x) \times P_{t,c}(x)$;
+Wildcard, P occurrences in T: $\sum_j{P_jT_{i+j}(P_j-T_{i+j})^2}=0$ to match at pos $i$. Expand then FFT.
+
 \kactlimport{KMP.h}
 \kactlimport{Zfunc.h}
 \kactlimport{Manacher.h}
