@@ -7,3 +7,8 @@ investigate mle
 segtree beats
 
 wavelet compression?
+
+
+fix mcmf, flow
+fix hashmap
+half plane intersection
