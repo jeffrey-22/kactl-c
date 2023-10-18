@@ -29,3 +29,7 @@ ss << str;
 int foo,bar;
 ss >> foo >> bar; // foo = 100, bar = 200
 
+P's occurrences in fixed T: a range in the SA of T (can be further narrowed ch by ch);
+Longest Common Prefix of s and t[i:]: Z Func of s + '$' + t;
+# of ch matches of s and t[i:]: reverse s, PSc(x)=[str_i==c]x^i, FFT of PSc(x)*PTc(x);
+Wildcard, P occurrences in T: sum_j{P[j]T[i+j](P[j]-T[i+j])^2}=0 to match at pos i. Expand then FFT.
