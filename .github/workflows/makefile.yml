@@ -1,0 +1,20 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y python2.7 texlive
+          sudo apt-get install -y texlive-latex-extra
+      - uses: actions/checkout@v4
+      - run: make kactl
