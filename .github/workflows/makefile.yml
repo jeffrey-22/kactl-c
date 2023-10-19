@@ -12,17 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Dependency - Checkout
       - uses: actions/checkout@v4
-      - name: Dependency - Python
       - uses: actions/setup-python@v4
         with:
           python-version: '2.7' 
       - run: python my_script.py
-      - name: Dependency - PDFlatex
-        uses: Closoco/pdflatex-action@v1.1.0
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
+      - uses: Closoco/pdflatex-action@v1.1.0
       - name: Build pdf
       - run: make kactl
