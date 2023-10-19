@@ -3,25 +3,23 @@
  * Date: 2015-09-12
  * License: CC0
  * Source: CF
- * Description: I keep coding these wrong
+ * Description: Takes in the graph (to, len) and returns the distance vector. inf if unreachable from s. $O(m\log m)$
  * Status: tested
  */
-const ll inf = 1000000000000000000ll;
-void dijkstra(int s) {
-  for(int i = 1; i <= n; i++) dis[i] = inf;
-  memset(vis, 0, sizeof(vis));
-  priority_queue< pair<ll,int> ,vector<pair<ll,int> > ,greater< pair<ll,int> > > q;
-  dis[s]=0;
+const ll inf = 1e18 + 5;
+vector<ll> dijkstra(const vector<vector<pair<int, ll>>> &g, int s) {
+  vector<ll> d(sz(g), inf); // sz(g) + 1 for 1-indexed graph
+  vector<int> vis(sz(g));
+  priority_queue< pair<ll,int>, vector<pair<ll,int> >, greater< pair<ll,int> > > q;
+  d[s]=0;
   q.push({0, s});
   while(!q.empty()) {
-    int u=q.top().ss;
-    q.pop();
+    int u = q.top().ss; q.pop();
     if (vis[u]) continue;
-    vis[u]=1;
-    for(auto i : e[u])
-      if (dis[i.ff] > i.ss + dis[u]) {
-        dis[i.ff] = i.ss + dis[u];
-        q.push({dis[i.ff], i.ff});
-      }
+    vis[u] = 1;
+    for(auto i : g[u])
+      if (d[i.ff] > i.ss + d[u])
+        d[i.ff] = i.ss + d[u], q.push({d[i.ff], i.ff});
   }
+  return d;
 }
