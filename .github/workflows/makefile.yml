@@ -18,5 +18,4 @@ jobs:
           python-version: '2.7' 
       - run: python my_script.py
       - uses: Closoco/pdflatex-action@v1.1.0
-      - name: Build pdf
       - run: make kactl
