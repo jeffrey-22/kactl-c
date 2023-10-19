@@ -43,8 +43,14 @@
 	\kactlimport{CompressTree.h}
 	\kactlimport{HLD.h}
 	\kactlimport{LinkCutTree.h}
-	\kactlimport{centroid.h}
+	% \kactlimport{centroid.h}
 	\kactlimport{DirectedMST.h}
+	\subsection{Centroid Decomposition}
+	Vertex $u$ is a centroid iff size of all subtress after removing $u$ is $\leq \frac{n}{2}$. There can be at most two centroids, and if there are two they are equivalent.
+
+	Find a centroid, process all the contributions that go through it, delete the centroid from the graph, recursively solve for each subgraph.
+
+	Time is $O(n \log n)$.
 
 \section{Math}
 	\subsection{Number of Spanning Trees}
