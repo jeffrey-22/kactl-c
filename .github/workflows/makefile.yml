@@ -12,5 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: check files
+      run: ls
     - name: Build pdf
       run: make kactl
