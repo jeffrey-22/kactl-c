@@ -12,11 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
+      - name: Dependency - Checkout
+      - uses: actions/checkout@v4
+      - name: Dependency - Python
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '2.7' 
+      - run: python my_script.py
+      - name: Dependency - PDFlatex
+        uses: Closoco/pdflatex-action@v1.1.0
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
       - name: Build pdf
-        run: make kactl
+      - run: make kactl
