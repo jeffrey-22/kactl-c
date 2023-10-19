@@ -15,5 +15,7 @@ jobs:
       - run: |
           sudo apt-get update
           sudo apt-get install -y python2.7 texlive
+          sudo tlmgr update --self
+          sudo tlmgr install framed
       - uses: actions/checkout@v4
       - run: make kactl
