@@ -15,11 +15,11 @@ struct MinCostMaxFlow {
     int to, rev;
     ll c, oc, w;
   };
-  vi ptr, vis;
+  vi ptr, vis, q;
   vector<ll> d;
   vector<vector<Edge>> g;
   typedef pair<ll,int> pli;
-  MinCostMaxFlow(int n) : ptr(n), vis(n), d(n), g(n) {}
+  MinCostMaxFlow(int n) : ptr(n), vis(n), q(n), d(n), g(n) {}
   pair<int, int> addEdge(int a, int b, ll c, ll cost) {
     g[a].push_back({b, sz(g[b]), c, c, cost});
     g[b].push_back({a, sz(g[a]) - 1, 0ll, 0ll, -cost});
@@ -39,19 +39,23 @@ struct MinCostMaxFlow {
     return 0;
   }
   pair<ll, ll> calc(int s, int t) {
-    ll flow = 0, totcost = 0;
+    ll flow = 0, totcost = 0; q[0] = s;
     while(1) {
-      ptr = vis = vi(sz(g));
+      ptr = vi(sz(g));
       d = vector<ll>(sz(g), inf);
-      priority_queue< pli, vector<pli>, greater<pli> > q;
-      d[s] = 0, q.push({0, s});
-      while (!q.empty()) {
-        int v = q.top().ss; q.pop();
-        if (vis[v]) continue;
-        vis[v] = 1;
+      int qi = d[s] = 0, qe = vis[s] = 1;
+      while (qi < qe) {
+        int v = q[qi++];
+        vis[v] = 0;
         for (Edge e : g[v])
-          if (e.c && d[e.to] > e.w + d[v])
-            d[e.to] = e.w + d[v], q.push({d[e.to], e.to});
+          if (e.c && d[e.to] > e.w + d[v]) {
+            d[e.to] = e.w + d[v];
+            if (!vis[e.to]) {
+              vis[e.to] = 1;
+              if (sz(q) == qe) q.pb(e.to); else q[qe] = e.to;
+              qe++;
+            }
+          }
       }
       if (d[t] == inf) break;
       while (ll p = dfs(s, t, LLONG_MAX)) flow += p, totcost += p * d[t];
