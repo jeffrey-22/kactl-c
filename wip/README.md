@@ -4,3 +4,6 @@
 
 remove sos
 compress
+cycle cnt
+z func desc
+remove win stuff
