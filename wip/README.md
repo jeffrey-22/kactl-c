@@ -9,3 +9,4 @@ z func desc
 remove win stuff
 dp 0/1 -> meaning
 vec hashmap
+fft needs complex, oops
